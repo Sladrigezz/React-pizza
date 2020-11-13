@@ -9,13 +9,16 @@ function Home({items}) {
         <Categories items={['Все', 'Мясные', 'Вегетарианские', 'Гриль', 'Острые', 'Закрытые']
         }></Categories>
 
-        <SortPopup items={['популярности', 'цене', 'алфавиту']}></SortPopup>
+        <SortPopup items={[
+          {name: 'популярности', type: 'popular'},
+          {name: 'цене', type: 'price'},
+          {name: 'алфавиту', type: 'alphabet'}]}></SortPopup>
 
       </div>
       <h2 className="content__title">Все пиццы</h2>
       <div className="content__items">
 
-        {items.map((item) =>
+        {items && items.map((item) =>
           (<PizzaBlock
             key={item.id}
             {...item}
