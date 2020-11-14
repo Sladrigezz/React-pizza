@@ -4,13 +4,13 @@ import {useDispatch, useSelector} from 'react-redux'
 import {Categories, SortPopup, PizzaBlock, LoadingPizzaBlock} from '../components';
 
 import {fetchPizzas} from '../redux/actions/pizzas'
-import {setCategory} from '../redux/actions/filters'
+import {setCategory, setSortBy} from '../redux/actions/filters'
 
 const categoryName = ['Все', 'Мясные', 'Вегетарианские', 'Гриль', 'Острые', 'Закрытые']
 const sortItems = [
-  {name: 'популярности', type: 'popular'},
-  {name: 'цене', type: 'price'},
-  {name: 'алфавиту', type: 'alphabet'}]
+  {name: 'популярности', type: 'popular', order: 'desc'},
+  {name: 'цене', type: 'price', order: 'desc'},
+  {name: 'алфавиту', type: 'name', order: 'asc'}]
 
 function Home() {
   const dispatch = useDispatch()
@@ -20,11 +20,15 @@ function Home() {
 
   React.useEffect(() => {
     // пофиксить чтоб не обновлялось при переходе в корзину и обратно
-    dispatch(fetchPizzas());
-  }, [category]);
+    dispatch(fetchPizzas(sortBy, category));
+  }, [category, sortBy]);
 
   const onSelectCategory = React.useCallback((index) => {
     dispatch(setCategory(index))
+  }, [])
+
+  const onSelectSortType = React.useCallback((type) => {
+    dispatch(setSortBy(type))
   }, [])
 
   return (
@@ -37,10 +41,10 @@ function Home() {
           items={categoryName}>
         </Categories>
 
-        <SortPopup items={sortItems}></SortPopup>
+        <SortPopup activeSortType={sortBy.type} items={sortItems} onClickSortType={onSelectSortType}></SortPopup>
 
       </div>
-      <h2 className="content__title">Все пиццы</h2>
+      <h2 className="content__title"></h2>
       <div className="content__items">
 
         {isLoaded ? items.map((item) =>
